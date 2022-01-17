@@ -23,7 +23,7 @@ This repository make use of the following platforms:
 
 ## Architecture
 
-TBD
+![Diagram](resources/ArchDiagram.jpeg)
 
 ## How to Run
 
