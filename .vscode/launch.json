@@ -3,12 +3,12 @@
     "configurations": [  
         {
             "name": "Launch MTBlazorApp",
-            "type": "pwa-chrome",
+            "type": "blazorwasm",
             "request": "launch",
             "timeout": 30000,
             "preLaunchTask": "build",
             "url": "http://localhost:5260",
-            "webRoot": "${workspaceFolder}/src/MTBlazorApp",
+            "cwd": "${workspaceFolder}/src/MTBlazorApp",
             "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
         },
         {

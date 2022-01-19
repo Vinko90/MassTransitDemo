@@ -14,7 +14,7 @@ namespace MTBlazorApp.Pages
 		/// The Order Service for API request
 		/// </summary>
 		[Inject]
-		public IOrderService OrderService { get; set; }
+		public IOrderService? OrderService { get; set; }
 
 		/// <summary>
         /// The current generated Order
@@ -63,8 +63,11 @@ namespace MTBlazorApp.Pages
 
 			try
 			{
-				var result = await OrderService.SubmitOrder(CurrentOrder);
-				Console.WriteLine($"Response code: {result.StatusCode}");
+				if (OrderService != null)
+				{
+					var result = await OrderService.SubmitOrder(CurrentOrder);
+					Console.WriteLine($"Response code: {result.StatusCode}");
+				}			
 			}
 			catch (Exception ex)
 			{

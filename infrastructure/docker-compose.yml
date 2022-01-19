@@ -1,0 +1,29 @@
+version: "3.8"
+
+networks:
+  everything:
+
+services:
+   #Configure RabbitMQ Container
+   rabbitmq:
+     image: rabbitmq:3-management-alpine
+     container_name: "rabbitmqdemo"
+     hostname: "rabbitmqdemo"
+     ports:
+       - "5672:5672"
+       - "15672:15672"
+     networks:
+       - "everything"
+
+#  prometheus:
+#    image: prom/prometheus
+#    ports:
+#      - "9090:9090"
+#    networks:
+#      - "everything"
+#  grafana:
+#    image: grafana/grafana:8.3.3
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      - "everything"
