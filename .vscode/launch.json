@@ -3,10 +3,13 @@
     "configurations": [  
         {
             "name": "Launch MTBlazorApp",
-            "type": "blazorwasm",
+            "type": "pwa-chrome",
             "request": "launch",
+            "timeout": 30000,
+            "preLaunchTask": "build",
             "url": "http://localhost:5260",
-            "cwd": "${workspaceFolder}/src/MTBlazorApp"
+            "webRoot": "${workspaceFolder}/src/MTBlazorApp",
+            "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
         },
         {
             "name": "Launch MTOrderService",
@@ -28,11 +31,12 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
-        },
+        }
+    ],
+    "compounds": [
         {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach"
+            "name": "Launch All",
+            "configurations": ["Launch MTBlazorApp", "Launch MTOrderService"]
         }
     ]
 }

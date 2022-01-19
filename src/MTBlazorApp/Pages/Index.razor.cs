@@ -1,13 +1,21 @@
 ﻿using System.Timers;
+using Microsoft.AspNetCore.Components;
+using MTBlazorApp.Utils;
 using MTCore.Models;
 
 namespace MTBlazorApp.Pages
 {
-	/// <summary>
+    /// <summary>
     /// Code behind for Index Page
     /// </summary>
     public partial class Index
 	{
+		/// <summary>
+		/// The Order Service for API request
+		/// </summary>
+		[Inject]
+		public IOrderService OrderService { get; set; }
+
 		/// <summary>
         /// The current generated Order
         /// </summary>
@@ -41,7 +49,7 @@ namespace MTBlazorApp.Pages
 		/// <summary>
         /// Generate a new GUID and send message to API
         /// </summary>
-		private void SendMessage()
+		private async Task SendMessage()
         {
 			Console.WriteLine("Generating and processing new order!");
 
@@ -52,6 +60,16 @@ namespace MTBlazorApp.Pages
 			};
 
 			TotalProcessedOrders++;
+
+			try
+			{
+				var result = await OrderService.SubmitOrder(CurrentOrder);
+				Console.WriteLine($"Response code: {result.StatusCode}");
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"{ex.Message}");
+			}
 
 			StateHasChanged();
         }
@@ -69,9 +87,9 @@ namespace MTBlazorApp.Pages
         /// </summary>
         /// <param name="source">Timer source object</param>
         /// <param name="e">Event args</param>
-		private void OnTimedEvent(object? source, ElapsedEventArgs e)
+		private async void OnTimedEvent(object? source, ElapsedEventArgs e)
 		{
-			SendMessage();
+			await SendMessage();
 		}
 	}
 }
