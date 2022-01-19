@@ -1,5 +1,4 @@
-﻿using System;
-using System.Timers;
+﻿using System.Timers;
 using MTCore.Models;
 
 namespace MTBlazorApp.Pages
@@ -7,7 +6,7 @@ namespace MTBlazorApp.Pages
 	/// <summary>
     /// Code behind for Index Page
     /// </summary>
-	public partial class Index
+    public partial class Index
 	{
 		/// <summary>
         /// The current generated Order

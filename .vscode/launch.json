@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [  
+        {
+            "name": "Launch MTBlazorApp",
+            "type": "blazorwasm",
+            "request": "launch",
+            "url": "http://localhost:5260",
+            "cwd": "${workspaceFolder}/src/MTBlazorApp"
+        },
+        {
+            "name": "Launch MTOrderService",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/MTOrderService/bin/Debug/net6.0/MTOrderService.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/MTOrderService",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        }
+    ]
+}

@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace MTCore.Models
+﻿namespace MTCore.Models
 {
-	/// <summary>
+    /// <summary>
     /// Model class used to send a new order to OrderService API
     /// </summary>
-	public class Order
+    public class Order
 	{
         /// <summary>
         /// The Order ID
