@@ -1,4 +1,6 @@
-﻿namespace MTCore.Models
+﻿using System;
+
+namespace MTCore.Models
 {
     /// <summary>
     /// Model class used to send a new order to OrderService API

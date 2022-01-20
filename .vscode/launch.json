@@ -31,12 +31,21 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
+        },
+        {
+            "name": "Launch MTShippingService",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/MTShippingService/bin/Debug/net6.0/MTShippingService.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/MTShippingService"
         }
     ],
     "compounds": [
         {
             "name": "Launch All",
-            "configurations": ["Launch MTBlazorApp", "Launch MTOrderService"]
+            "configurations": ["Launch MTBlazorApp", "Launch MTOrderService", "Launch MTShippingService"]
         }
     ]
 }

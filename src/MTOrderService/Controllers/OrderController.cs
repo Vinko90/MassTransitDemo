@@ -1,3 +1,4 @@
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using MTCore.Models;
 
@@ -11,14 +12,17 @@ namespace MTOrderService.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ILogger<OrderController> _logger;
+        private readonly IBus _bus;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         /// <param name="logger">Logger interface</param>
-        public OrderController(ILogger<OrderController> logger)
+        /// <param name="bus">The service bus</param>
+        public OrderController(ILogger<OrderController> logger, IBus bus)
         {
             _logger = logger;
+            _bus = bus;
         }
 
         /// <summary>
@@ -35,8 +39,8 @@ namespace MTOrderService.Controllers
         {
             if (order != null && order.OrderId != "0")
             {
-                _logger.LogInformation($"Received new order: {order.OrderId}");
-
+                _logger.LogInformation($"Received new order: {order.OrderId}, forwarding for shipping...");
+                await _bus.Publish(order);
                 return Ok();
             }
 
