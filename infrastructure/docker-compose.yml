@@ -12,6 +12,7 @@ services:
       ports:
         - "5672:5672"
         - "15672:15672"
+        - "15692:15692"
       networks:
         - "everything"
     #Configure Seq Container
@@ -32,15 +33,27 @@ services:
         - ACCEPT_EULA=Y
       networks:
         - "everything"
-#  prometheus:
-#    image: prom/prometheus
-#    ports:
-#      - "9090:9090"
-#    networks:
-#      - "everything"
-#  grafana:
-#    image: grafana/grafana:8.3.3
-#    ports:
-#      - "3000:3000"
-#    networks:
-#      - "everything"
+    #Configure Prometheus Container
+    prometheus:
+      image: prom/prometheus
+      container_name: "prometheusdemo"
+      hostname: "prometheusdemo"
+      volumes:
+        - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      ports:
+        - "9090:9090"
+      networks:
+        - "everything"
+    #Configure Grafana Container
+    grafana:
+      image: grafana/grafana-oss
+      container_name: "grafanademo"
+      hostname: "grafanademo"
+      depends_on:
+        - prometheus
+      volumes:
+        - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yaml
+      ports:
+        - "3000:3000"
+      networks:
+        - "everything"

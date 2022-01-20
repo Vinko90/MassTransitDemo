@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  #Configure Prometheus Job
+  - job_name: prometheus
+    static_configs:
+      - targets: 
+        - 'localhost:9090'
+  #Configure RabbitMQ Job
+  - job_name: rabbitmq
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+        - 'rabbitmq:15692'
+  #Configure MTOrderService Job
+  - job_name: mtorderservice
+    static_configs:
+      - targets:
+        - 'host.docker.internal:7100'
+  #Configure MTShippingService Job
+  - job_name: mtshippingservice
+    static_configs:
+      - targets:
+        - 'host.docker.internal:7200'
