@@ -5,16 +5,33 @@ networks:
 
 services:
    #Configure RabbitMQ Container
-   rabbitmq:
-     image: rabbitmq:3-management-alpine
-     container_name: "rabbitmqdemo"
-     hostname: "rabbitmqdemo"
-     ports:
-       - "5672:5672"
-       - "15672:15672"
-     networks:
-       - "everything"
-
+    rabbitmq:
+      image: rabbitmq:3-management-alpine
+      container_name: "rabbitmqdemo"
+      hostname: "rabbitmqdemo"
+      ports:
+        - "5672:5672"
+        - "15672:15672"
+      networks:
+        - "everything"
+    #Configure Seq Container
+    seq:
+      image: datalust/seq:latest
+      container_name: "seqdemo"
+      hostname: "seqdemo"
+      ports:
+        - "80:80"
+        - "5341:5341"
+      deploy:
+        resources:
+          limits:
+            memory: 16G
+          reservations:
+            memory: 16G
+      environment:
+        - ACCEPT_EULA=Y
+      networks:
+        - "everything"
 #  prometheus:
 #    image: prom/prometheus
 #    ports:

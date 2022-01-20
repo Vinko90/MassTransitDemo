@@ -26,7 +26,7 @@ namespace MTBlazorApp.Utils
         {
             var json = JsonSerializer.Serialize(order);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-            return await client.PostAsync("api/order", data);
+            return await client.PostAsync("api/Order", data);
         }
     }
 }

@@ -11,7 +11,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddHttpClient<IOrderService, OrderService>(client =>
 {
     //Set the base address of the OrderService API
-    client.BaseAddress = new Uri("http://localhost:5037");
+    client.BaseAddress = new Uri("http://localhost:7100");
 });
 
 builder.Services.AddMudServices();

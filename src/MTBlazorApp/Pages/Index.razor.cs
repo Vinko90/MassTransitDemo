@@ -67,7 +67,7 @@ namespace MTBlazorApp.Pages
 				{
 					var result = await OrderService.SubmitOrder(CurrentOrder);
 					Console.WriteLine($"Response code: {result.StatusCode}");
-				}			
+				}		
 			}
 			catch (Exception ex)
 			{

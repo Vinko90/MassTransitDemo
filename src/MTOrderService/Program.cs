@@ -1,5 +1,8 @@
 ﻿using System.Reflection;
+using MassTransit;
+using MassTransit.PrometheusIntegration;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 using Serilog;
 
 //Set early console for startup info
@@ -17,16 +20,27 @@ try
     builder.Host.UseSerilog((ctx, lc) => lc
         .ReadFrom.Configuration(ctx.Configuration));
 
+    //Consifure XOrigin
     builder.Services.AddCors(options =>
     {
         options.AddDefaultPolicy(builder => 
-        builder.AllowAnyOrigin()
+            builder.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
     }); 
 
+    // Add MassTransit
+    builder.Services.AddMassTransit(x =>
+    {
+        x.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.ConfigureEndpoints(context);
+            cfg.UsePrometheusMetrics(serviceName: "MTOrderService");
+        });
+    });
+
     builder.Services.AddControllers();
-    builder.Services.AddEndpointsApiExplorer();
+    //builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
     {
         options.SwaggerDoc("v1", new OpenApiInfo
@@ -40,6 +54,9 @@ try
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
     });
 
+    //Add MassTransit Hosted Service
+    builder.Services.AddMassTransitHostedService(true);
+
     var app = builder.Build();
 
     //Add request logging features
@@ -48,16 +65,25 @@ try
     // Configure the HTTP request pipeline.
     app.UseRouting();
 
+    app.UseAuthorization();
+
+    app.UseCors();
+
+    //Add MT Metrics
+    app.UseEndpoints(endpoints =>
+    {
+        // add this line
+        endpoints.MapMetrics();
+        endpoints.MapControllers();
+    });
+
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-
-    app.UseCors();
-    app.MapControllers();
-
+    
     app.Run();
 }
 catch (Exception ex)
