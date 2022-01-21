@@ -3,22 +3,16 @@ using MassTransit;
 using MassTransit.PrometheusIntegration;
 using Microsoft.OpenApi.Models;
 using Prometheus;
-using Serilog;
-
-//Set early console for startup info
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
-
-Log.Information("Starting up");
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    //Add serilog logger from configuration
-    builder.Host.UseSerilog((ctx, lc) => lc
-        .ReadFrom.Configuration(ctx.Configuration));
+    //Configure Microsoft logging with Seq Sink
+    builder.Services.AddLogging(loggingBuilder =>
+    {
+        loggingBuilder.AddSeq(builder.Configuration.GetSection("Seq"));
+    });
 
     //Consifure XOrigin
     builder.Services.AddCors(options =>
@@ -59,9 +53,6 @@ try
 
     var app = builder.Build();
 
-    //Add request logging features
-    app.UseSerilogRequestLogging();
-
     // Configure the HTTP request pipeline.
     app.UseRouting();
 
@@ -88,10 +79,5 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Unhandled exception");
-}
-finally
-{
-    Log.Information("Shut down complete");
-    Log.CloseAndFlush();
+    Console.WriteLine(ex.Message);
 }

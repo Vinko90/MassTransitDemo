@@ -33,6 +33,8 @@ namespace MTShippingService
             _logger.LogInformation("Received Order ID: {id} from {Sender}...Shipping to customer!", 
                 context.Message.OrderId, context.SourceAddress);
 
+            _logger.LogError("Log an error for testing Seq sink!");
+            
             return Task.CompletedTask;
         }
     }
