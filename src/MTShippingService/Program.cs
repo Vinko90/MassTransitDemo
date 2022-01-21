@@ -2,24 +2,26 @@
 using MassTransit.PrometheusIntegration;
 using MTShippingService;
 using Prometheus;
-using Serilog;
-
-//Set early console for startup info
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
-
-Log.Information("Starting up");
 
 try
 {
     var host = Host.CreateDefaultBuilder(args);
 
-    host.UseSerilog((ctx, lc) => lc
-        .ReadFrom.Configuration(ctx.Configuration));
+    //Fetch appsettings for WorkerService application
+    var configuration = new ConfigurationBuilder()
+        .AddEnvironmentVariables()
+        .AddCommandLine(args)
+        .AddJsonFile("appsettings.json")
+        .Build();
 
     host.ConfigureServices(services =>
     {
+        //Configure Microsoft logging with Seq Sink
+        services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.AddSeq(configuration.GetSection("Seq"));
+        });
+
         // Add MassTransit to service container
         services.AddMassTransit(x =>
         {
@@ -45,10 +47,5 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Unhandled exception");
-}
-finally
-{
-    Log.Information("Shut down complete");
-    Log.CloseAndFlush();
+    Console.WriteLine(ex.Message);
 }

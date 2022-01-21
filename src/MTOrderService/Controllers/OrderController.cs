@@ -40,6 +40,7 @@ namespace MTOrderService.Controllers
             if (order != null && order.OrderId != "0")
             {
                 _logger.LogInformation($"Received new order: {order.OrderId}, forwarding for shipping...");
+                _logger.LogWarning("Warning message for testing logger!");
                 await _bus.Publish(order);
                 return Ok();
             }
