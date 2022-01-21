@@ -2,6 +2,8 @@
 using MassTransit;
 using MassTransit.PrometheusIntegration;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Prometheus;
 
 try
@@ -14,7 +16,7 @@ try
         loggingBuilder.AddSeq(builder.Configuration.GetSection("Seq"));
     });
 
-    //Consifure XOrigin
+    //Configure XOrigin
     builder.Services.AddCors(options =>
     {
         options.AddDefaultPolicy(builder => 
@@ -22,6 +24,17 @@ try
                 .AllowAnyMethod()
                 .AllowAnyHeader());
     }); 
+
+    //Configure OpenTelemetry Tracing
+    builder.Services.AddOpenTelemetryTracing((builder) => builder
+        .AddAspNetCoreInstrumentation()
+        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("MTOrderService"))
+        .AddSource("MTOrderService")
+        .AddJaegerExporter(o =>
+        {
+            o.AgentHost = "localhost";
+            o.AgentPort = 6831;
+        }));
 
     // Add MassTransit
     builder.Services.AddMassTransit(x =>
