@@ -4,7 +4,7 @@ networks:
   everything:
 
 services:
-   #Configure RabbitMQ Container
+    #Configure RabbitMQ Container
     rabbitmq:
       image: rabbitmq:3-management-alpine
       container_name: "rabbitmqdemo"
@@ -15,6 +15,35 @@ services:
         - "15692:15692"
       networks:
         - "everything"
+    #Configure MTOrderService Container
+    orderservice:
+      container_name: "MTOrderService"
+      image: mtorderservice:latest
+      build:
+        context: ../src
+        dockerfile: ../src/MTOrderService/Dockerfile
+      ports:
+        - "7100:80"
+      networks:
+        - "everything"
+      depends_on:
+        - rabbitmq
+      environment:
+        ASPNETCORE_ENVIRONMENT: "Development"
+        RABBITMQ_URI: "rabbitmq://guest:guest@rabbitmqdemo:5672"
+    #Configure MTShippingService Container
+    shippingservice:
+      container_name: "MTShippingService"
+      image: mtshippingservice:latest
+      build:
+        context: ../src
+        dockerfile: ../src/MTShippingService/Dockerfile
+      networks:
+        - "everything"
+      depends_on:
+        - rabbitmq
+      environment:
+        RABBITMQ_URI: "rabbitmq://guest:guest@rabbitmqdemo:5672"
     #Configure Seq Container
     seq:
       image: datalust/seq:latest

@@ -36,11 +36,14 @@ try
             o.AgentPort = 6831;
         }));
 
+    //Get URI for RabbitMQ
+    var rabbitMqUri = Environment.GetEnvironmentVariable("RABBITMQ_URI");
     // Add MassTransit
     builder.Services.AddMassTransit(x =>
     {
         x.UsingRabbitMq((context, cfg) =>
         {
+            if (rabbitMqUri != null) cfg.Host(new Uri(rabbitMqUri));
             cfg.ConfigureEndpoints(context);
             cfg.UsePrometheusMetrics(serviceName: "MTOrderService");
         });

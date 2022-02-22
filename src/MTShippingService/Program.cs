@@ -22,6 +22,8 @@ try
             loggingBuilder.AddSeq(configuration.GetSection("Seq"));
         });
 
+        //Get URI for RabbitMQ
+        var rabbitMqUri = Environment.GetEnvironmentVariable("RABBITMQ_URI");
         // Add MassTransit to service container
         services.AddMassTransit(x =>
         {
@@ -29,6 +31,7 @@ try
 
             x.UsingRabbitMq((context, cfg) =>
             {
+                if (rabbitMqUri != null) cfg.Host(new Uri(rabbitMqUri));
                 cfg.ConfigureEndpoints(context);
                 cfg.UsePrometheusMetrics(serviceName: "MTShippingService");
             });

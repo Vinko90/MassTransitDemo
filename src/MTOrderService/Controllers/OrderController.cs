@@ -37,15 +37,12 @@ namespace MTOrderService.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> SubmitOrder(Order order)
         {
-            if (order != null && order.OrderId != "0")
-            {
-                _logger.LogInformation($"Received new order: {order.OrderId}, forwarding for shipping...");
-                _logger.LogWarning("Warning message for testing logger!");
-                await _bus.Publish(order);
-                return Ok();
-            }
+            if (order == null || order.OrderId == "0") return BadRequest();
+            _logger.LogInformation($"Received new order: {order.OrderId}, forwarding for shipping...");
+            _logger.LogWarning("Warning message for testing logger!");
+            await _bus.Publish(order);
+            return Ok();
 
-            return BadRequest();
         }
     }
 }
